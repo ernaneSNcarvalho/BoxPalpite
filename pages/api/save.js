@@ -4,12 +4,13 @@ import { fromBase64 } from '../../utils/base64'
 
 const doc = new GoogleSpreadsheet(process.env.SHEET_DOC_ID)
 
-const genCupom = () => {
+const generateCoupon = () => {
   const code = parseInt(moment().format('YYMMDDHHmmssSSS')).toString(16).toUpperCase()
-  return code.substr(0, 4) + '-' + code.substr(4, 4) + '-' + code.substr(8, 4)
+  return code.substr(0,4) + '-' + code.substr(4,4) + '-' + code.substr(8,4)
 }
 
-export default async (req, res) => {
+export default async(req, res) => {
+
   try {
     await doc.useServiceAccountAuth({
       client_email: process.env.SHEET_CLIENT_EMAIL,
@@ -24,31 +25,36 @@ export default async (req, res) => {
 
     const mostrarPromocaoCell = sheetConfig.getCell(1, 0)
     const textoCell = sheetConfig.getCell(1, 1)
-
+    
+    // Nome	Email	Whatsapp	Cupom	Promo
     let Cupom = ''
     let Promo = ''
     if (mostrarPromocaoCell.value === 'VERDADEIRO') {
-      Cupom = genCupom()
+      Cupom = generateCoupon()
       Promo = textoCell.value
     }
 
-    // Nome	Email	Whatsapp	Cupom	Promo
     await sheet.addRow({
       Nome: data.Nome,
       Email: data.Email,
       Whatsapp: data.Whatsapp,
+      Critica: data.Critica,
+      Indica: data.Indica,
       Nota: parseInt(data.Nota),
       'Data Preenchimento': moment().format('DD/MM/YYYY HH:mm:ss'),
       Cupom,
       Promo
     })
+    
     res.end(JSON.stringify({
       showCoupon: Cupom !== '',
       Cupom,
       Promo
     }))
-  } catch (err) {
-    console.log(err)
+
+  } catch (error) {
+    console.log(error);
     res.end('error')
   }
+
 }
