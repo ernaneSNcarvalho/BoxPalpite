@@ -1,14 +1,13 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { fromBase64 } from '../../utils/base64'
 
-const doc = new GoogleSpreadsheet(process.env.SHEET_DOC_ID)
+const credentials = require('../../credentials.json')
+
+const doc = new GoogleSpreadsheet('1HvXZS1JhLYu-m4Ojok6s2qA540_9CgezMUEzIkJt-bk')
 
 export default async (req, res) => {
   try {
-    await doc.useServiceAccountAuth({
-      client_email: process.env.SHEET_CLIENT_EMAIL,
-      private_key: fromBase64(process.env.SHEET_PRIVATE_KEY)
-    })
+    await doc.useServiceAccountAuth(credentials)
     await doc.loadInfo()
 
     const sheet = doc.sheetsByIndex[2]
@@ -28,7 +27,5 @@ export default async (req, res) => {
       message: ''
     }))
   }
-
-
 
 }

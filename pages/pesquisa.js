@@ -131,7 +131,7 @@ const Pesquisa = () => {
           {formik.errors.Indica ? (
             <div className='text-red-700'>{formik.errors.Indica}</div>
           ) : null}
-          <button type='submit' className='w-full bg-blue-400 px-12 py-4 font-bold rounded-lg shadow-lg hover:shadow mb-6'>Enviar</button>        
+          <button type='submit' className='w-full bg-black text-yellow-300 px-12 py-4 font-bold rounded-lg shadow-lg hover:shadow mb-6'>Enviar</button>        
         </form>
       </div>}
       {success && <div className='w-1/5 mx-auto'>
